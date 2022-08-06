@@ -1,0 +1,17 @@
+/venv/
+/db.sqlite3
+# /sangharsh/settings.py
+*.pyc
+*.pdf
+*/profile/*
+*.jpeg
+/*.log
+/*.pyc
+.venv
+.env
+*.pyc
+*.idea
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+__pycache__/*

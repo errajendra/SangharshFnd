@@ -1,0 +1,33 @@
+{% extends "user/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!--Register--> 
+<div class="container card" style="">
+    <h1 class="fs-2 fw-bolder mt-2">Blood Donation Form</h1>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <!-- {{ form }} -->
+                {% for field in form.visible_fields %}
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% render_field field class="form-control" %}
+                        {% for error in field.errors %}
+                        <span class="help-block text-danger form-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div align="center">
+                <button class="btn btn-primary mt-2" type="submit">Submit</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

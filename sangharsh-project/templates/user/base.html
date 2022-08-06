@@ -1,0 +1,295 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Sangharsh Foundation Society ( Non Profit Organization )</title>
+    <!--  Bootstrap Style -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+    <!--  Font-Awesome Style -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+    <!--  Pretty Photo Style -->
+    <link href="{% static 'css/prettyPhoto.css' %}" rel="stylesheet" />
+    <!--  Google Font Style -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css' />
+    <!--  Custom Style -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+
+    {% block cssblock %}{% endblock cssblock %}
+</head>
+<body>
+    
+    <div id="home" class="navbar navbar-default move-me ">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src=" {% static 'img/s-logo.png' %}" class="navbar-brand-logo " alt=""></a>
+            </div>
+
+
+            
+            
+            <nav class="navbar-collapse collapse">
+                <div class="container-fluid">
+                  {% comment %} <div class="navbar-header">
+                    <a class="navbar-brand" href="#">WebSiteName</a>
+                  </div> {% endcomment %}
+                  <ul class="nav navbar-nav">
+                    <li class=""><a href="{% url 'dashbord' %}"><i class="fa fa-home"></i>Home</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-tint"></i> Blood Donations
+                      <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li class=""><a href="{% url 'add_blood_donate' %}"><i class="fa fa-plus"></i> Register</a></li>
+                        <li><a href="{% url 'view_blood_donate' %}"><i class="fa fa-eye"></i> View</a></li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-users"></i> Members
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'register' %}"><i class="fa fa-plus"></i> Register</a></li>
+                            <li><a href="{% url 'view_members' %}"><i class="fa fa-eye"></i> View</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-newspaper"></i> Activity
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'add_activity' %}"><i class="fa fa-plus"></i> Add</a></li>
+                            <li><a href="{% url 'view_activities' %}"><i class="fa fa-eye"></i> View</a></li>
+                        </ul>
+                    </li>
+                    {% if request.user.admin %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-newspaper"></i> Admin Page
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'view-ac-setting' %}"><i class="fa fa-eye"></i>View Setting</a></li>
+                            <li><a href="{% url 'view_district' %}"><i class="fa fa-eye"></i> View District</a></li>
+                        </ul>
+                    </li>
+                    {% elif request.user.staff %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-newspaper"></i> Staff Page
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% comment %} <li class=""><a href="{% url 'view-ac-setting' %}"><i class="fa fa-plus"></i>View Setting</a></li> {% endcomment %}
+                            <li><a href="{% url 'view_district' %}"><i class="fa fa-eye"></i> View District</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% comment %} <li><a href="#">Page 3</a></li> {% endcomment %}
+                    {% endif %}
+
+                    <li class="dropdown">
+
+                        {% if request.user.is_authenticated %}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user"></i>
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                              <li><a href="{% url 'profile' request.user.id %}">Profile</a></li>
+                              <li><a href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        {% else %}
+                        <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login 
+                            <span> </span>
+                        </a>
+                        {% endif %}
+                      </li>
+                  </ul>
+                </div>
+              </nav>
+
+
+
+
+
+
+            {% comment %} <div class="navbar-collapse collapse ">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown">
+                        <a href="{% url 'dashbord' %}"> <i class="fa fa-home"></i> Dashbord</a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="{% url 'view_blood_donate' %}"> <i class="fa fa-plus"></i> Donations</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{% url 'view_members' %}#about"><i class="fa fa-users"></i>Members</a>
+                    </li>
+
+                    {% if request.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="{% url 'profile' request.user.id %}"><i class="fa fa-heart"></i> Profile</a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="dropdown">
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'logout' %}"><i class="fa fa-user"></i> {{request.user.name}}
+                            <span>Logout</span>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login 
+                            <span> </span>
+                        </a>
+                        {% endif %}
+
+                    </li>
+                </ul>
+            </div> {% endcomment %}
+
+        </div>
+    </div>
+    <!--./ NAV BAR END -->
+    <div class="header-sec-bar" >
+        <span>
+            <a href="mailto:sangharshfoundation.ws@gmail.com"><i class="fa fa-envelope-o "></i>sangharshfoundation.ws@gmail.com </a>
+            <a href="tel:+918120914673" title="Shailendra"><i class="fa fa-phone "></i>+91-8120914673</a>
+            <a href="tel:9425999697" title="Office"><i class="fa fa-phone "></i>+91-9425999697</a>
+        </span>
+
+    </div>
+    <!--./ HEADER SECTION BAR END -->
+    <div id="main-head">
+
+        <div class="container">
+            {% block content %}{% endblock content %}
+        </div>
+    </div>
+    <!--./ MAIN HEADER SECTION END -->
+    
+    <div id="footer-sec">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4" id="about-ftr">
+                    <h3><span>A Small Introduction</span></h3>
+                    <p>
+                        Sangharsh Foundation all members always try to meet new people and are always ready to fix the problems of socially.
+                    </p>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h3><span>Latest Donations</span></h3>
+                    <div id="blog-footer-div">
+                        {% if donations %}
+                        <div class="media">
+                            <div class="pull-left">
+                                <img src=" img/user2.png" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="media-body">
+                                <span class="media-heading">Shailendra</span>
+                                <small class="muted">₹ 4000 in Account</small>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="pull-left">
+                                <img src=" img/user.gif" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="media-body">
+                                <span class="media-heading">Rajendra</span>
+                                <small class="muted">₹ 2500 by UPI</small>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="media">
+                            <div class="pull-left">
+                                <img src=" img/user2.png" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="media-body">
+                                <span class="media-heading">Shailendra</span>
+                                <small class="muted">₹ 4000 in Account</small>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="pull-left">
+                                <img src=" img/user.gif" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="media-body">
+                                <span class="media-heading">Rajendra</span>
+                                <small class="muted">₹ 2500 by UPI</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <h3><span>Quick Donation</span></h3>
+                    <div>
+                        Bank Name: Union Bank of India
+                        <br/>
+                        Name: Sangharsh Foundation & Welfare Society
+                        <br />
+                        Account Nomber: 452501010033559
+                        <br/>
+                        IFSC: UBIN0545252
+                        <br/>
+                        Mobile: +91 9425999697
+                        <br />
+                        E-mail: sangharshfoundation.ws@gmail.com
+                    </div>
+
+
+                    {% comment %} <div class="form-group">
+                        <button type="submit" class="btn btn-primary ">DONATE FOR A CHILD</button>
+                    </div> {% endcomment %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footser-end">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    2022 All Rights Reserved |  by <a href="http://www.sangharshfoundationws.wordpress.com/" target="_blank" style="color: #fff"> www.sangharshfoundationws.com</a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--./ footer-end End -->
+      <div class="move-me">
+
+      
+    <a href="#home" class="scrollup"><i class="fa fa-chevron-up"></i></a>
+          </div>
+     <!--END SCROLLUP LINK SECTION-->
+    
+    <!--  Jquery Core Script -->
+    <script src="{% static 'js/jquery-1.10.2.js' %}"></script>
+    <!--  Core Bootstrap Script -->
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <!--  Scrolling Script -->
+    <script src="{% static 'js/jquery.easing.min.js' %}"></script>
+    <!--  PrettyPhoto Script -->
+    <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+    <!--  knob Scripts -->
+    <script src="{% static 'js/jquery.knob.js' %}"></script>
+     <!--  SCROLL REVEAL Scripts -->
+    <script src="{% static 'js/scrollReveal.js' %}"></script>
+    <!--  Custom Scripts -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script>
+      
+    </script>
+    {% block scriptblock %}{% endblock scriptblock %}
+</body>
+</html>

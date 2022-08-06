@@ -1,0 +1,74 @@
+{% extends "user/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+  <div class="mx-5 text-left">
+    <a href="{% url 'add-ac-setting' %}" class="btn-link" type="button">New Setting</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">SN</th>
+            <th scope="col">Year</th>
+            <th scope="col">Required Money</th>
+            <th scope="col">Food Provided</th>
+            <th scope="col">Blood Provided</th>
+            <th scope="col">Added by</th>
+            {% if request.user.admin or request.user.staff %}
+              <th scope="col">Action</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+            {% for el in data %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{el.year}}</td>
+                <td>{{el.fund_required}}</td>
+                <td>{{el.provided_food_percentage}}</td>
+                <td>{{el.provided_blood_percentage}}</td>
+                <td>{{el.added_by}}</td>
+                {% if request.user.admin or request.user.staff  %}
+                  <td>
+                    {% if el.is_verified %}
+										<i class="fa fa-check" aria-hidden="true"></i>
+										{% else %}
+											{% comment %} <a href="{% url 'verify_blood_donator' el.id %}" class="btn-link">Verify</a> {% endcomment %}
+										{% endif %}
+                    {% if request.user.admin %}
+                    {% comment %} <a href="#" class="btn-link">delete</a> {% endcomment %}
+                    {% endif %}
+                  </td>
+                {% endif %}
+                
+            </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block cssblock %}
+{% comment %} Data table css start {% endcomment %}
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"> {% endcomment %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+{% comment %} datatable end {% endcomment %}
+{% endblock cssblock %}
+
+{% block scriptblock %}
+  {% comment %} Data table JS {% endcomment %}
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.table').DataTable();
+    } );
+  </script>
+  {% comment %} end DataTable JS {% endcomment %}
+{% endblock scriptblock %}

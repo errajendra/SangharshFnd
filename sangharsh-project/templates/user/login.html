@@ -1,0 +1,28 @@
+{% extends "user/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!--Register--> 
+<div class="container px-5">
+	<h1 class="text-center">Login</h1>
+	
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            <div class="px-5">
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% render_field field class="form-control" %}
+                    {% for error in field.errors %}
+                    <span class="help-block text-danger form-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        <button class="btn btn-primary mx-5 mt-3" type="submit">Login</button>
+      </form>
+      <a href="{% url 'register' %}" type="btn">Register here</a>  
+
+	</div>
+
+{% endblock %}

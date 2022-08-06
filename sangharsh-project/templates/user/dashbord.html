@@ -1,0 +1,205 @@
+{% extends "user/base.html" %}
+{% load static %}
+{% block content %}
+
+<!--Start--> 
+
+{% comment %} <div class="container">
+	<h4 class="text-left">Dashbord</h4>
+</div> {% endcomment %}
+
+
+
+<div class="main-container">
+
+		<div class="heading">
+		  <p class="heading__credits"><a class="heading__link" target="_blank" href="{% url 'print' request.user.id %}">View ID card</a></p>
+		</div>
+
+		<div class="cards">
+
+
+			{% comment %} Status {% endcomment %}
+			<div class="card card-3">
+				<h1 class="heading__title">Status</h1>
+				<h4 class="card__title">
+					<div class="table-responsive">
+						<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Content</th>
+								<th scope="col">Description</th>
+							</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Blood Donated:</td>
+									<td>Count- {{blood_donate_count}}</td>
+								</tr>
+								<tr>
+									<td>Role:</td>
+									<td>{{request.user.role}}</td>
+								</tr>
+								
+								{% if request.user.staff %}
+								<tr>
+									<td>Member Since:</td>
+									<td>{{member_since}}</td>
+								</tr>
+								{% endif %}
+
+								{% if request.user.admin or request.user.staff %}
+								{% else %}
+								<tr>
+									<td>Member Since:</td>
+									<td>{{member_since}}</td>
+								</tr>
+								<tr>
+									<td>Expiry Date</td>
+									<td>{{request.user.get_expiry}}</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</h4>
+				<p class="card__apply">
+				<a class="card__link" href="#">Apply Now <i class="fas fa-arrow-right"></i></a>
+				</p>
+			</div>
+
+			{% comment %} Blood Donations Card {% endcomment %}
+			<div class="card card-1">
+				<h1 class="heading__title">Blood Donations</h1>
+				<div class="card__title">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+							<tr>
+								<th scope="col">Donator</th>
+								<th scope="col">Pet.BG</th>
+								<th scope="col">Pet.Name</th>
+								<th scope="col">Rec.Name</th>
+								<th scope="col">Rec.Mobile</th>
+								<th scope="col">Feedback</th>
+								<th scope="col">Date</th>
+								{% if request.user.admin or request.user.staff %}
+								<th scope="col">Verify</th>
+								{% endif %}
+							</tr>
+							</thead>
+							<tbody>
+								{% for el in blood_donates %}
+								<tr>
+									<td><a href="{% url 'profile' el.donator.id %}" title="View Profile">{{el.donator}}</a></td>
+									<td>{{el.patient_blood_group}}</td>
+									<td>{{el.patient_name}}</td>
+									<td>{{el.receiver_name}}</td>
+									<td>{{el.receiver_mobile}}</td>
+									<td>{{el.message}}</td>
+									<td>{{el.created_on|date:"d/m/y"}}</td>
+									{% if request.user.admin or request.user.staff %}
+								 	<td>
+										{% if el.is_verified %}
+										<i class="fa fa-check" aria-hidden="true"></i>
+										{% else %}
+											<a href="{% url 'verify_blood_donator' el.id %}" class="btn-link">Verify</a>
+										{% endif %}
+									</td>
+									{% endif %}
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<p class="card__apply">
+				<a class="card__link" href="{% url 'view_blood_donate' %}">View All <i class="fas fa-arrow-right"></i></a>
+				</p>
+			</div>
+
+			{% if request.user.admin or request.user.staff %}
+				{% comment %} Contact {% endcomment %}
+				<div class="card card-2">
+					{% comment %} <div class="card__icon"><i class="fas fa-bolt"></i></div>
+					<p class="card__exit"><i class="fas fa-times"></i></p> {% endcomment %}
+						<h1 class="heading__title">Contacts</h1>
+					<div class="card__title">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+								<tr>
+									<th scope="col">Name</th>
+									<th scope="col">Email</th>
+									<th scope="col">Mobile</th>
+									<th scope="col">Message</th>
+									<th scope="col">Date</th>
+								</tr>
+								</thead>
+								<tbody>
+									{% for el in contacts %}
+									<tr>
+										<td>{{el.name}}</td>
+										<td>{{el.email}}</td>
+										<td>{{el.mobile_nomber}}</td>
+										<td>
+											<a href="#demo-{{el.id}}" data-toggle="collapse">view message</a>
+											<div id="demo-{{el.id}}" class="collapse">
+												{{el.message}}
+											</div>
+										</td>
+										<td>{{el.created_on|date:"M d, Y"}}</td>
+									</tr>
+									{% endfor %}
+							</tbody>
+							</table>
+						</div>
+					</div>
+					<p class="card__apply">
+					<a class="card__link" href="{% url 'view_contacts' %}">View All <i class="fas fa-arrow-right"></i></a>
+					</p>
+				</div>
+			{% endif %}
+
+			
+			{% comment %} Card 4 start {% endcomment %}
+			{% comment %} <div class="card card-4">
+				<div class="card__icon"><i class="fas fa-bolt"></i></div>
+				<p class="card__exit"><i class="fas fa-times"></i></p>
+				<h2 class="card__title">Quis nostrud exercitation ullamco laboris nisi.</h2>
+				<p class="card__apply">
+				<a class="card__link" href="#">Apply Now <i class="fas fa-arrow-right"></i></a>
+				</p>
+			</div> {% endcomment %}
+
+			{% comment %} Card 5 start {% endcomment %}
+			{% comment %} <div class="card card-5">
+				<div class="card__icon"><i class="fas fa-bolt"></i></div>
+				<p class="card__exit"><i class="fas fa-times"></i></p>
+				<h2 class="card__title">Ut aliquip ex ea commodo consequat. Duis aute irure dolor.</h2>
+				<p class="card__apply">
+				<a class="card__link" href="#">Apply Now <i class="fas fa-arrow-right"></i></a>
+				</p>
+			</div> {% endcomment %}
+
+			{% comment %} Card repeat 1 {% endcomment %}
+			{% comment %} <div class="card card-1">
+				<div class="card__icon"><i class="fas fa-bolt"></i></div>
+				<p class="card__exit"><i class="fas fa-times"></i></p>
+				<h2 class="card__title">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+				<p class="card__apply">
+				<a class="card__link" href="#">Apply Now <i class="fas fa-arrow-right"></i></a>
+				</p>
+			</div> {% endcomment %}
+
+		  {% comment %} Card end {% endcomment %}
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block cssblock %}
+<link href="{% static 'css/dashbord_card.css' %}" rel="stylesheet" />
+{% endblock cssblock %}
+{% block scriptblock %}{% endblock scriptblock %}

@@ -1,0 +1,59 @@
+{% extends "user/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+{% load static %}
+
+<div class"container">
+  <div class="mx-5 text-left">
+    <a href="{% url 'register' %}" class="btn-link" type="button">Add Member</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Email</th>
+            <th scope="col">Message</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for el in contacts %}
+            <tr>
+                <td>{{el.name}}</td>
+                <td>{{el.mobile_nomber}}</td>
+                <td>{{el.email}}</td>
+                <td>{{el.message}}</td>
+                <td>
+                  <a href="#">mark</a>
+                  <a href="#">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block cssblock %}
+{% comment %} Data table css start {% endcomment %}
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"> {% endcomment %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+{% comment %} datatable end {% endcomment %}
+{% endblock cssblock %}
+
+{% block scriptblock %}
+  {% comment %} Data table JS {% endcomment %}
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.table').DataTable();
+    } );
+  </script>
+  {% comment %} end DataTable JS {% endcomment %}
+{% endblock scriptblock %}

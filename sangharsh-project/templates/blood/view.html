@@ -1,0 +1,76 @@
+{% extends "user/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+  <div class="mx-5 text-left">
+    <a href="{% url 'add_blood_donate' %}" class="btn-link" type="button">Add Blood Donator</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Donator</th>
+            <th scope="col">BG</th>
+            <th scope="col">Receiver</th>
+            <th scope="col">Receiver Mobile</th>
+            <th scope="col">Pateint</th>
+            <th scope="col">Pateint Mobile</th>
+            <th scope="col">Address</th>
+            {% if request.user.admin or request.user.staff %}
+              <th scope="col">Action</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+            {% for el in data %}
+            <tr>
+                <td>{{el.donator}}</td>
+                <td>{{el.patient_blood_group}}</td>
+                <td>{{el.receiver_name}}</td>
+                <td>{{el.receiver_mobile}}</td>
+                <td>{{el.patient_name}}</td>
+                <td>{{el.patient_mobile}}</td>
+                <td>{{el.address}}</td>
+                {% if request.user.admin or request.user.staff  %}
+                  <td>
+                    {% if el.is_verified %}
+										<i class="fa fa-check" aria-hidden="true"></i>
+										{% else %}
+											<a href="{% url 'verify_blood_donator' el.id %}" class="btn-link">Verify</a>
+										{% endif %}
+                    {% if request.user.admin %}
+                    <a href="#" class="btn-link">delete</a>
+                    {% endif %}
+                  </td>
+                {% endif %}
+                
+            </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block cssblock %}
+{% comment %} Data table css start {% endcomment %}
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"> {% endcomment %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+{% comment %} datatable end {% endcomment %}
+{% endblock cssblock %}
+
+{% block scriptblock %}
+  {% comment %} Data table JS {% endcomment %}
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.table').DataTable();
+    } );
+  </script>
+  {% comment %} end DataTable JS {% endcomment %}
+{% endblock scriptblock %}
