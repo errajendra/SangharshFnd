@@ -109,6 +109,7 @@ class CustomUser(AbstractBaseUser):
     blood_group = models.CharField(max_length=4, choices=BLOOD_GROUP_CHOICES, null=True, blank=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
+    is_superuser = models.BooleanField(default=False)
     valid_up_to = models.DateField(default=date.today(), null=True,blank=True)
     
     created_on = models.DateTimeField(auto_now_add=True)
