@@ -18,9 +18,9 @@ def index(request):
     
     donates= BloodDonate.objects.all()[:6]
     try:
-        setting=FoundationAccountSetting.objects.get(year=datetime.date.today().year)
+        setting=FoundationAccountSetting.objects.all().first()
     except:
-        setting=FoundationAccountSetting.objects.all().order_by('-updated_at').first()
+        setting=None
     context['setting'] = setting
     context['raised_fund'] = 12500
     count=0
@@ -76,18 +76,21 @@ def dashbord(request):
 # @login_required
 def register_request(request):
 
-    if request.user.admin or request.user.staff:
-        if request.method == "POST":
-            form = NewUserForm(request.POST, request.FILES)
-            if form.is_valid():
-                user = form.save()
-                login(request, user)
-                return redirect("view_members")
-            else:
-                return render (request=request, template_name="user/register.html", context={"form":form})
+    try:
+        if request.user.admin or request.user.staff:
+            if request.method == "POST":
+                form = NewUserForm(request.POST, request.FILES)
+                if form.is_valid():
+                    user = form.save()
+                    login(request, user)
+                    return redirect("view_members")
+                else:
+                    return render (request=request, template_name="user/register.html", context={"form":form})
 
-        form = NewUserForm()
-        return render (request=request, template_name="user/register.html", context={"form":form})
+            form = NewUserForm()
+            return render (request=request, template_name="user/register.html", context={"form":form})
+    except:
+        pass
     
     if request.method == "POST":
         form = NewUserFormOut(request.POST, request.FILES)
@@ -149,7 +152,7 @@ def logout_request(request):
 
 
 def view_card(request,id):
-    if request.user.created_on.date() < datetime.date.today():
+    if request.user.valid_up_to < datetime.date.today():
         print("Please renew yor id...")
         return redirect(dashbord)
     instance = get_object_or_404(CustomUser, id=id)

@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from djmoney.models.fields import MoneyField
 
+from PIL import Image
+
 # Create your models here.
 
 
@@ -144,6 +146,15 @@ class CustomUser(AbstractBaseUser):
             return str(self.district)+", "
         return " "
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.profile.path)
+        
+        if img.height > 100 or img.width > 100:
+            output_size = (100,100)
+            img.thumbnail(output_size)
+            img.save(self.profile.path)
+        
     @property
     def is_staff(self):
         "Is the user a member of staff?"

@@ -113,7 +113,7 @@
             text-align: center;
             color: navy;
         }
-        .member-since {
+        .expire {
             position: absolute;
             top: 81%;
             left: 3%;
@@ -179,7 +179,7 @@
                         <div class="names">
                             <h2 class="profile-name">{{data.name}}</h2>
                             <h4 class="profile-role">{{data.role}}</h4>
-                            <h4 class="member-since">since- {{data.created_on|date:'M-y'}}</h4>
+                            <h4 class="expire">Expire- {{data.valid_up_to|date:'d-M-y'}}</h4>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@
                         <img id="qr" class="squre-qr" src="#" alt="">
                     </div>
                     <div class="details">
-                        <h4 class="dt"><b>Valiedity :</b>{{data.valid_up_to}}</h4>
+                        <h4 class="dt"><b>Joined:</b>{{data.created_on|date:'d-M-y'}}</h4>
                         <h4 class="dt1"><b>Mob. NO. :</b>{{data.mobile_nomber}}</h4>
                         <h4 class="dt2"><b>Address. :</b>{{data.full_address}} {{data.get_district}}India</h4>
                     </div>

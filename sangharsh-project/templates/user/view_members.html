@@ -36,7 +36,7 @@
                 <td>{{el.address}}</td>
                 <td> </td>
                 <td>
-                  <a href="{% url 'print' el.id %}">print</a>
+                  <a href="{% url 'print' el.id %}" target="_blank">print</a>
                   <a href="{% url 'update_user' el.id %}">edit</a>
                   <a href="{% url 'delete_user' el.id %}">delete</a>
                 </td>

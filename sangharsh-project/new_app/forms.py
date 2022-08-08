@@ -37,7 +37,7 @@ class UpdateUserFormAdmin(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "alternet_mobile_nomber", "district", "profile", "staff", "admin")
+        fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "alternet_mobile_nomber", "role", "district", "profile", "staff", "admin")
 
 
 
