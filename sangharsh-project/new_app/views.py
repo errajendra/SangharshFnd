@@ -43,27 +43,30 @@ def dashbord(request):
     
     # admin and staff dashbord metarial
     if request.user.admin or request.user.staff:
-        # try:
-        #     context['contacts'] = Contact.objects.all()[:5]
-        # except:
-        #     context['contacts'] = Contact.objects.all()
+        blood_donates = BloodDonate.objects.filter(donator=user)
+        try:
+            context['contacts'] = Contact.objects.all()[:5]
+        except:
+            context['contacts'] = Contact.objects.all()
         
         try:
             context['blood_donates'] = BloodDonate.objects.all()[:5]
         except:
             context['blood_donates'] = BloodDonate.objects.all()
+        context['blood_donate_count'] = blood_donates.count()
          
     
     else: # member dashbord metarial
-        blood_donates = context['blood_donates'] = BloodDonate.objects.filter(donator=user)
+        blood_donates = BloodDonate.objects.filter(donator=user)
         try:
             context['blood_donates'] = blood_donates[:5]
+            context['blood_donate_count'] = blood_donates.count()
         except:
             context['blood_donates'] = blood_donates
-        context['blood_donate_count'] = blood_donates.count()
+            context['blood_donate_count'] = blood_donates.count()
         
     user_created_on = user.created_on
-    member_since = datetime.datetime.now().date() - user_created_on.date()
+    member_since = user.valid_up_to - user_created_on.date()
     context['member_since'] = member_since
         
     return render(request, "user/dashbord.html", context=context)
@@ -73,7 +76,7 @@ def dashbord(request):
 # @login_required
 def register_request(request):
 
-    if request.user.is_authenticated:
+    if request.user.admin or request.user.staff:
         if request.method == "POST":
             form = NewUserForm(request.POST, request.FILES)
             if form.is_valid():
@@ -146,6 +149,9 @@ def logout_request(request):
 
 
 def view_card(request,id):
+    if request.user.created_on.date() < datetime.date.today():
+        print("Please renew yor id...")
+        return redirect(dashbord)
     instance = get_object_or_404(CustomUser, id=id)
     return render(request, "id.html", {'data':instance})
 
@@ -194,6 +200,9 @@ def ajax_fun(request):
     
     
 def add_blood_donate(request):
+    if request.user.created_on.date() < datetime.date.today():
+        print("Please renew yor id...")
+        return redirect(view_blood_donate)
     if request.method == "POST":
         form = BloodDonateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -218,7 +227,7 @@ def verify_blood_donator(request, id):
     
 def view_contacts(request):
     pass
-    # return render(request, 'contact_view.html', {'contacts':Contact.objects.all()})
+    return render(request, 'contact_view.html', {'contacts':Contact.objects.all()})
     
 
 @login_required
