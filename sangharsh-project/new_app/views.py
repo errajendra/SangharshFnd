@@ -6,9 +6,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
 
 from new_app.models import BloodDonate, CustomUser, Activity, FoundationAccountSetting, Contact, District
-from .forms import AccountSettingForm, ActivityForm, BloodDonateForm, DistrictForm, NewUserForm, NewUserFormOut, UpdateProfileForm, UpdateUserFormAdmin
+from .forms import AccountSettingForm, ActivityForm, BloodDonateForm, DistrictForm, NewUserForm, NewUserFormOut, UpdateProfileForm, UpdateUserFormAdmin, UpdateUserFormStaff
 
 
 
@@ -21,6 +22,7 @@ def index(request):
         setting=FoundationAccountSetting.objects.all().first()
     except:
         setting=None
+    context['events'] = Activity.objects.all()
     context['setting'] = setting
     context['raised_fund'] = 12500
     count=0
@@ -66,7 +68,7 @@ def dashbord(request):
             context['blood_donate_count'] = blood_donates.count()
         
     user_created_on = user.created_on
-    member_since = user.valid_up_to - user_created_on.date()
+    member_since = datetime.date.today() - user_created_on.date()
     context['member_since'] = member_since
         
     return render(request, "user/dashbord.html", context=context)
@@ -82,7 +84,7 @@ def register_request(request):
                 form = NewUserForm(request.POST, request.FILES)
                 if form.is_valid():
                     user = form.save()
-                    login(request, user)
+                    # login(request, user)
                     return redirect("view_members")
                 else:
                     return render (request=request, template_name="user/register.html", context={"form":form})
@@ -107,14 +109,31 @@ def register_request(request):
 
 @login_required
 def view_members(request):
-    return render(request, 'user/view_members.html', {'data':CustomUser.objects.all()})
+    if request.user.has_validity or request.user.admin:
+        return render(request, 'user/view_members.html', {'data':CustomUser.objects.all()})
 
 
 @login_required
 def update_user_admin(request, id):
-    if request.user.is_admin or request.user.is_staff:
+    if request.user.is_admin:
         instance = get_object_or_404(CustomUser, id=id)
         form = UpdateUserFormAdmin(request.POST or None, request.FILES or None, instance=instance)
+        if request.method == "POST":
+            if form.is_valid:
+                n_pass = request.POST['password']
+                if n_pass != "":
+                    form.instance.password = make_password(n_pass)
+                form.save()
+                return redirect("view_members")
+            else:
+                pass
+        return render(request, "user/update.html", {'form':form})
+    
+    elif request.user.is_staff:
+        instance = get_object_or_404(CustomUser, id=id)
+        if instance.admin:
+            return redirect('view_members')
+        form = UpdateUserFormStaff(request.POST or None, request.FILES or None, instance=instance)
         if request.method == "POST":
             if form.is_valid:
                 form.save()
@@ -152,7 +171,7 @@ def logout_request(request):
 
 
 def view_card(request,id):
-    if request.user.valid_up_to < datetime.date.today():
+    if request.user.has_validity:
         print("Please renew yor id...")
         return redirect(dashbord)
     instance = get_object_or_404(CustomUser, id=id)
@@ -203,7 +222,7 @@ def ajax_fun(request):
     
     
 def add_blood_donate(request):
-    if request.user.created_on.date() < datetime.date.today():
+    if request.user.valid_up_to < datetime.date.today():
         print("Please renew yor id...")
         return redirect(view_blood_donate)
     if request.method == "POST":
@@ -245,10 +264,11 @@ def add_activity(request):
 
 
 def view_activity(request):
-    activities = Activity.objects.all()
-    return HttpResponse(activities)
+    # activities = Activity.objects.all()
+    return redirect(dashbord)
 
 
+@login_required
 def add_district(request):
     form = DistrictForm(request.POST)
     if request.method == "POST":
@@ -258,6 +278,7 @@ def add_district(request):
     return render(request, 'distt/add.html', {'form':form})
 
 
+@login_required
 def view_district(request):
     instanse = District.objects.all()
     return render(request, 'distt/view.html', {'data':instanse})
@@ -274,6 +295,7 @@ def add_ac_setting(request):
     return render(request, 'activity/add.html', {'form':form})
 
 
+@login_required
 def view_ac_setting(request):
     settings = FoundationAccountSetting.objects.all()
     return render(request, 'setting/view.html', {'data':settings})

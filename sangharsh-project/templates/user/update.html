@@ -21,6 +21,16 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                {% if request.user.admin %}
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="id_password">Change New Password (only if user forget his password)</label>
+                        <input type="text" name="password" maxlength="50" class="form-control" placeholder="Not Required new Password" id="id_password" autocomplete="off">
+                    </div>
+                </div>
+                {% endif %}
+            
             </div>
             <div align="center">
                 <button class="btn btn-primary mt-2" type="submit">Submit</button>

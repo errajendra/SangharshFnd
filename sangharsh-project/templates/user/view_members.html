@@ -20,7 +20,9 @@
             <th scope="col">Father Name</th>
             <th scope="col">Address</th>
             <th scope="col">Vailidity</th>
+            {% if request.user.admin or request.user.staff %}
             <th scope="col">Action</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -33,13 +35,35 @@
                 <td>{{el.role}}</td>
                 <td>{{el.mobile_nomber}}, {{el.alternet_mobile_nomber}}<br/>{{el.email}}</td>
                 <td>{{el.father_name}}</td>
-                <td>{{el.address}}</td>
-                <td> </td>
+                <td>{{el.full_address}}</td>
+                <td>{{el.valid_up_to}}</td>
+                {% if request.user.admin or request.user.staff %}
                 <td>
                   <a href="{% url 'print' el.id %}" target="_blank">print</a>
-                  <a href="{% url 'update_user' el.id %}">edit</a>
-                  <a href="{% url 'delete_user' el.id %}">delete</a>
+                  <a class="mx" href="{% url 'update_user' el.id %}">edit</a>
+                  <a data-toggle="modal" data-target="#deleteModal" href="#">delete</a>
                 </td>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Member</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>are you sure to delete {{el.name}} which on {{el.role}} role</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-red"><a href="{% url 'delete_user' el.id %}">Confirm</a></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
             </tr>
             {% endfor %}
       </tbody>

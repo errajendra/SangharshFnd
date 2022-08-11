@@ -32,12 +32,19 @@ class UpdateUserFormAdmin(UserChangeForm):
 
     valid_up_to =  DateField(widget=widgets.DateInput(attrs={'type': 'date'}))
 
-    # def __init__(self, *args: Any, **kwargs: Any) -> None:
-    #       super().__init__(*args, **kwargs)
-
     class Meta:
         model = CustomUser
         fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "alternet_mobile_nomber", "role", "district", "profile", "staff", "admin")
+
+
+# update user form through staff
+class UpdateUserFormStaff(UserChangeForm):
+
+    valid_up_to =  DateField(widget=widgets.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "alternet_mobile_nomber", "role", "district", "profile", "staff")
 
 
 

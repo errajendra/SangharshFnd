@@ -112,7 +112,7 @@ class CustomUser(AbstractBaseUser):
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
     is_superuser = models.BooleanField(default=False)
-    valid_up_to = models.DateField(default=date.today(), null=True,blank=True)
+    valid_up_to = models.DateField(default=date.today() - timedelta(days=1), null=True,blank=True)
     
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -131,27 +131,27 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self):
         return self.name
-    
-    def full_address(self):
-        if self.address1 and self.address2:
-            return str(self.address1)+", "+str(self.address2) + ", "
-        elif self.address1:
-            return self.address1
-        elif self.address2:
-            return self.address2
-        return " "
-    
+   
     def get_district(self):
         if self.district:
             return str(self.district)+", "
         return " "
-
+ 
+    def full_address(self):
+        if self.address1 and self.address2:
+            return str(self.address1)+", "+str(self.address2) + ", " + self.get_district()
+        elif self.address1:
+            return self.address1 + self.get_district()
+        elif self.address2:
+            return self.address2 + self.get_district()
+        return " "
+    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         img = Image.open(self.profile.path)
         
-        if img.height > 100 or img.width > 100:
-            output_size = (100,100)
+        if img.height > 150 or img.width > 150:
+            output_size = (150,150)
             img.thumbnail(output_size)
             img.save(self.profile.path)
         
@@ -175,6 +175,11 @@ class CustomUser(AbstractBaseUser):
     
     def get_expiry(self):
         return self.valid_up_to
+    
+    def has_validity(self):
+        if self.valid_up_to > date.today():
+            return True
+        return False
     
     
 # contact model
@@ -236,55 +241,6 @@ class BloodDonate(models.Model):
     
     
     
-# class UserAddress(models.Model):
-    
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_address")
-#     address1 = models.CharField(max_length=50)
-#     address2 = models.CharField(max_length=50, blank=True, null=True)
-#     district = models.CharField(max_length=50)
-#     state = models.CharField(max_length=50, default="Madhya Pradesh")
-#     pin_code = models.CharField(max_length=6, default="486886")
-    
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-    
-#     def __str__(self) -> str:
-#         return str(self.address1)+" "+str(self.district)+" "+str(self.state) + " " + str(self.pin_code)
-    
-    
-    
-# class UserRole(models.Model):
-    
-#     Presidant = 'PR'
-#     Vice_President = 'VPR'
-#     Executive_Vice_Presedant = 'EVP'
-#     Secretary = 'S'
-#     Joint_Secretary = 'JS'
-#     Treasure = 'T'
-#     Executive_Chairman = 'EC'
-#     Member = 'M'
-    
-#     USER_ROLE_CHOICES = [
-#         (Presidant , 'Presidant'),
-#         (Vice_President , 'Vice President'),
-#         (Executive_Chairman , 'Executive Chairman'),
-#         (Executive_Vice_Presedant , 'Executive Vice Presedant'),
-#         (Secretary , 'Secretary'),
-#         (Joint_Secretary , 'Joint Secretary'),
-#         (Treasure , 'Treasure'),
-#         (Member , 'Member'),
-#     ]
-    
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_role")
-#     role = models.CharField(choices=USER_ROLE_CHOICES, max_length=3, default=Member)
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-    
-#     def __str__(self) -> str:
-#         return self.role
-    
-    
-    
 class Activity(models.Model):
     
     def validate_image(fieldfile_obj):
@@ -304,7 +260,15 @@ class Activity(models.Model):
     def __str__(self) -> str:
         return self.title
     
-    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.featured_image.path)
+        
+        if img.height > 200 or img.width > 200:
+            output_size = (150,150)
+            img.thumbnail(output_size)
+            img.save(self.featured_image.path)
+        
     
     
 def year_choices():
