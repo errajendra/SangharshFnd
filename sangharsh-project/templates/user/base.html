@@ -63,6 +63,8 @@
                             <li><a href="{% url 'view_members' %}"><i class="fa fa-eye"></i> View</a></li>
                         </ul>
                     </li>
+                    
+                    {% if request.user.admin or request.user.staff %}
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-newspaper"></i> Activity
                         <span class="caret"></span></a>
@@ -71,6 +73,7 @@
                             <li><a href="{% url 'view_activities' %}"><i class="fa fa-eye"></i> View</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                     {% if request.user.admin %}
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-newspaper"></i> Admin Page
@@ -171,7 +174,8 @@
         </div>
     </div>
     <!--./ MAIN HEADER SECTION END -->
-    
+
+    {% if not request.user.staff %}
     <div id="footer-sec">
         <div class="container">
             <div class="row">
@@ -253,6 +257,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div id="footser-end">
         <div class="container">
 

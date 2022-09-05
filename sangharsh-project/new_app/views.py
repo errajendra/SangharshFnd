@@ -172,11 +172,10 @@ def logout_request(request):
 
 def view_card(request,id):
     if request.user.has_validity:
-        print("Please renew yor id...")
-        return redirect(dashbord)
-    instance = get_object_or_404(CustomUser, id=id)
-    return render(request, "id.html", {'data':instance})
-
+        instance = get_object_or_404(CustomUser, id=id)
+        return render(request, "id.html", {'data':instance})
+    print("Please renew your id...")
+    return redirect(dashbord)
 
 @login_required
 def delete_user(request, id):
@@ -232,7 +231,6 @@ def add_blood_donate(request):
             return redirect('dashbord')
     else:
         return render(request, 'blood/register.html', {'form':BloodDonateForm()})
-    
     
     
 def view_blood_donate(request):

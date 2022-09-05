@@ -228,6 +228,7 @@ class BloodDonate(models.Model):
     receiver_name = models.CharField(max_length=100)
     receiver_mobile = models.BigIntegerField()
     receiver_address = models.CharField(max_length=500)
+    date = models.DateField(null=True, blank=True)
     message = models.CharField(max_length=500, blank=True, null=True)
     verify = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

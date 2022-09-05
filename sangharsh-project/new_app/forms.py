@@ -34,7 +34,7 @@ class UpdateUserFormAdmin(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "alternet_mobile_nomber", "role", "district", "profile", "staff", "admin")
+        fields = ("name", "valid_up_to", "blood_group", "father_name", "mobile_nomber", "role", "address1", "address2", "district", "profile", "staff", "admin")
 
 
 # update user form through staff
@@ -76,9 +76,11 @@ class NewUserFormOut(UserCreationForm):
  
 class BloodDonateForm(forms.ModelForm):
     
+    date = DateField(widget=widgets.DateInput(attrs={'type': 'date'}))
+    
     class Meta:
         model = BloodDonate
-        fields = ("donator", "patient_name", "patient_blood_group", "patient_mobile","patient_address", "receiver_name","receiver_mobile","receiver_address","message")
+        fields = ("donator", "patient_name", "patient_blood_group", "patient_mobile","patient_address", "receiver_name","receiver_mobile","receiver_address","date","message")
         
         
         
